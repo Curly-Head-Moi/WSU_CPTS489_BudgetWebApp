@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login Page</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="bootstrap/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Optional custom styling */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .left-panel {
+      background-color: #ffffff; /* White background */
+    }
+    .right-panel {
+      background-color: #24285b; /* Dark maroon background */
+      color: #ffffff;
+    }
+    /* Adjust form max-width so it doesn’t stretch too wide */
+    .form-container {
+      max-width: 400px;
+    }
+    /* Hover effect for the link */
+    .hover-effect:hover {
+      color: #B0C4DE; /* Change to desired hover color */
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row vh-100">
+      <!-- Left Panel (Login Section) -->
+      <div class="col-md-8 d-flex flex-column align-items-center justify-content-center left-panel">
+        <h5 class="mb-4 text-center">
+            <a href="/" class="hover-effect" style="color: inherit;">A Budget Budgeting App</a>
+          </h5>
+        <div class="form-container w-100 px-3 px-md-0">
+          <h2 class="mb-3 text-center">Login to your Account</h2>
+          <form>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address / Username</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter your email or username"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter your password"
+              />
+            </div>
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn btn-secondary"
+                style="background-color: #24285b; border-color: #24285b;"
+              >
+                Sign In
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel (Signup Prompt) -->
+      <div class="col-md-4 d-flex flex-column align-items-center justify-content-center right-panel">
+        <h4 class="mb-3">New Here?</h4>
+        <p class="mb-4 text-center px-3">
+          Sign-up and begin managing your finances like an expert!
+        </p>
+        <button onclick="window.location.href='/register'" class="btn btn-light">Sign Up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (optional for advanced components) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

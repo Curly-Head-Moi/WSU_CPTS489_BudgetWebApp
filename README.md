@@ -5,6 +5,6 @@ Hello all! This Git repository is for WSU spring 2025 CPTS 489 Web Development c
 * Yannik  Castro --- y.castro-morales@wsu.edu
 * Kyler Kupp --- kyler.kupp@wsu.edu
 
-`npm init -y` for setting up node_modules folder
-`npm install express ejs sqlite3` for requirements
-`node app.js` for running the server
+```npm init -y``` for setting up node_modules folder
+```npm install express ejs sqlite3 bootstrap sequelize express-session``` for requirements
+```node app.js``` for running the server
