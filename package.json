@@ -1,0 +1,26 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "Hello all! This Git repository is for WSU spring 2025 CPTS 489 Web Development course term project. The authors of the web application are: * Moises Carranza --- moises.carranza@wsu.edu * Yannik  Castro --- y.castro-morales@wsu.edu * Kyler Kupp --- kyler.kupp@wsu.edu",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Curly-Head-Moi/WSU_CPTS489_BudgetWebApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Curly-Head-Moi/WSU_CPTS489_BudgetWebApp/issues"
+  },
+  "homepage": "https://github.com/Curly-Head-Moi/WSU_CPTS489_BudgetWebApp#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
