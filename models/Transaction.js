@@ -3,9 +3,9 @@ const sequelize = require('../db');
 
 
 class Transaction extends Model {
-    static async findByOwner(username) {
+    static async findByOwner(email) {
         try {
-            return await Transaction.findAll({ where: { owner: username } });
+            return await Transaction.findAll({ where: { userEmail: email } });
         } catch (error) {
             console.error(error);
             return null;
@@ -32,13 +32,20 @@ Transaction.init({
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    owner: {
+    userEmail: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'Users',
+            key: 'email'
+        },
+        onDelete: 'CASCADE'
     }
 }, {
     sequelize,
-    modelName: 'Transaction'
+    modelName: 'Transaction',
+    tableName: 'Transactions',
+    timestamps: true
 });
 
 module.exports = Transaction;
