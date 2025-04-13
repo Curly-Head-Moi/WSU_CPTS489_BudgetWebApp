@@ -98,7 +98,7 @@ async function setup() {
 
 // use alter:true for to preserve data
 // use force:true to completely rebuild the database
-sequelize.sync({ alter: true }).then(()=>{
+sequelize.sync({ force: true }).then(()=>{
   console.log("Sequelize Sync Completed...");
   setup().then(()=> console.log("User setup complete"))
 })
