@@ -11,6 +11,7 @@ const sequelize = require('./db');
 const userRouter = require('./userRouter');
 const transactionRouter = require('./transactionRouter');
 const goalRouter = require('./goalRouter');
+const budgetRouter = require("./budgetRouter");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
