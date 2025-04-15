@@ -4,7 +4,8 @@
   "description": "Hello all! This Git repository is for WSU spring 2025 CPTS 489 Web Development course term project. The authors of the web application are: * Moises Carranza --- moises.carranza@wsu.edu * Yannik  Castro --- y.castro-morales@wsu.edu * Kyler Kupp --- kyler.kupp@wsu.edu",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",

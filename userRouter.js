@@ -118,8 +118,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/financial", userCheck, (req, res) => {
-    const user = req.session.user;
-    res.render('financial', { user });
+    res.render('financial');
 });
 
 module.exports = router;
+module.exports.userCheck = userCheck;

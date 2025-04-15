@@ -1,16 +1,20 @@
-<script src="js/startup-modern.js"></script>
+<script src="/js/startup-modern.js"></script>
 <nav class="navbar navbar-expand-md fixed-top py-3 navbar-light" id="mainNav">
     <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>Budget Budgeting</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navcol-1">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link" href="index">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="transactions">Transactions</a></li>
-                <li class="nav-item"><a class="nav-link" href="manage">Manage Budget</a></li>
-                <li class="nav-item"><a class="nav-link" href="financial">Financial Goals</a></li>
-                <li class="nav-item"><a class="nav-link" href="support">Support</a></li>
+                <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/transactions">Transactions</a></li>
+                <li class="nav-item"><a class="nav-link" href="/manage">Manage Budget</a></li>
+                <li class="nav-item"><a class="nav-link" href="/financial">Financial Goals</a></li>
+                <li class="nav-item"><a class="nav-link" href="/support">Support</a></li>
             </ul>
-            <a class="btn btn-sm btn-secondary shadow me-2" role="button" href="login">Sign In</a>
-            <a class="btn btn-sm btn-primary shadow" role="button" href="register">Sign Up</a>
+            <% if (typeof user !== 'undefined' && user) { %>
+                <a class="btn btn-sm btn-danger shadow" role="button" href="/logout">Logout</a>
+            <% } else { %>
+                <a class="btn btn-sm btn-secondary shadow me-2" role="button" href="/login">Sign In</a>
+                <a class="btn btn-sm btn-primary shadow" role="button" href="/register">Sign Up</a>
+            <% } %>
         </div>
     </div>
 </nav>
