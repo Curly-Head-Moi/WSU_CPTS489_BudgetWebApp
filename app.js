@@ -9,6 +9,8 @@ const sequelize = require('./db');
 
 // Import routes
 const userRouter = require('./userRouter');
+const transactionRouter = require('./transactionRouter');
+const goalRouter = require('./goalRouter');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -25,9 +27,18 @@ app.use(session({
 
 // Middleware to parse request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Middleware to make user available to all views
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
 
 // Use routers
 app.use('/user', userRouter);
+app.use('/transactions', transactionRouter);
+app.use('/manage', goalRouter);
 
 // Authentication middleware for protected routes
 const authMiddleware = (req, res, next) => {
@@ -39,11 +50,6 @@ const authMiddleware = (req, res, next) => {
 };
 
 app.get('/', (req, res) => {
-  // if (req.session && req.session.user) {
-  //   res.render('index');
-  // } else {
-  //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  // }
   res.render('index');
 });
 
@@ -53,15 +59,11 @@ app.get('/index', (req, res) => {
 
 // Protected routes
 app.get('/financial', authMiddleware, (req, res) => {
-  res.render('financial', { user: req.session.user });
+  res.render('financial');
 });
 
 app.get('/manage', authMiddleware, (req, res) => {
-  res.render('manage', { user: req.session.user });
-});
-
-app.get('/transactions', authMiddleware, (req, res) => {
-  res.render('transactions', { user: req.session.user });
+  res.render('manage');
 });
 
 // Authentication routes
@@ -74,8 +76,12 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+    }
+    res.redirect('/');
+  });
 });
 
 app.get('/support', (req, res) => {
