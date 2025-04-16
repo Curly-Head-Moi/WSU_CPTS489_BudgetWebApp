@@ -32,7 +32,7 @@ Goal.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: [['total', 'groceries', 'entertainment', 'dining out', 'other']]
+            isIn: [['total', 'Food', 'Housing', 'Transportation', 'Utilities', 'Entertainment', 'Healthcare', 'Other']]
         }
     },
     amount: {

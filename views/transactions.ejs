@@ -91,7 +91,7 @@
             <% if (typeof transactions !== 'undefined' && transactions.length > 0) { %>
               <% transactions.forEach(transaction => { %>
                 <tr>
-                  <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                  <td><%= new Date(transaction.date).toISOString().split('T')[0] %></td>
                   <td><%= transaction.description %></td>
                   <td><%= transaction.category %></td>
                   <td class="<%= transaction.transactionType === 'Expense' ? 'text-danger' : 'text-success' %>">
@@ -289,6 +289,66 @@
           const id = this.getAttribute('data-id');
           document.getElementById('deleteTransactionForm').action = `/transactions/delete/${id}`;
         });
+      });
+      
+      // Handle filter button click
+      document.getElementById('filterButton').addEventListener('click', function() {
+        const form = document.getElementById('filterForm');
+        const startDate = form.elements.startDate.value;
+        const endDate = form.elements.endDate.value;
+        const category = form.elements.category.value;
+        const search = form.elements.search.value.toLowerCase();
+        
+        // Get all transaction rows
+        const tableRows = document.querySelectorAll('tbody tr');
+        
+        // Filter the table rows
+        tableRows.forEach(row => {
+          let showRow = true;
+          
+          // Get data from row cells
+          const rowDate = row.cells[0]?.textContent.trim() || '';
+          const rowDescription = row.cells[1]?.textContent.trim().toLowerCase() || '';
+          const rowCategory = row.cells[2]?.textContent.trim() || '';
+          
+          // Apply filters
+          if (startDate && rowDate < startDate) {
+            showRow = false;
+          }
+          
+          if (endDate && rowDate > endDate) {
+            showRow = false;
+          }
+          
+          if (category && rowCategory !== category) {
+            showRow = false;
+          }
+          
+          if (search && !rowDescription.includes(search)) {
+            showRow = false;
+          }
+          
+          // Show or hide row
+          row.style.display = showRow ? '' : 'none';
+        });
+        
+        // Show message if no transactions match filters
+        const visibleRows = document.querySelectorAll('tbody tr:not([style*="display: none"])');
+        const noResultsRow = document.getElementById('noFilterResults');
+        
+        if (visibleRows.length === 0) {
+          if (!noResultsRow) {
+            const tbody = document.querySelector('tbody');
+            const newRow = document.createElement('tr');
+            newRow.id = 'noFilterResults';
+            newRow.innerHTML = '<td colspan="5" class="text-center">No transactions match your filters.</td>';
+            tbody.appendChild(newRow);
+          } else {
+            noResultsRow.style.display = '';
+          }
+        } else if (noResultsRow) {
+          noResultsRow.style.display = 'none';
+        }
       });
     });
   </script>

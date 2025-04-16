@@ -8,48 +8,70 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Navbar -->
     <!-- Navigation Bar -->
     <%- include('templates/navbar') %>
-    <!-- Financial Goals Page -->
+
     <div class="container mt-5 pt-5" id="goals">
         <h2 class="text-primary fw-bold">Financial Goals</h2>
         <p class="text-muted">Track your progress on monthly spending and budget goals by category.</p>
         
-        <!-- Monthly Spending Goal Progress -->
-        <div class="card p-4 mb-4 border-warning shadow-sm">
-            <h4 class="text-warning fw-bold">Monthly Spending Goal</h4>
-            <div class="progress">
-                <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+        <% if (typeof error !== 'undefined') { %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
             </div>
-            <p class="mt-2">$1,200 spent out of $2,000 goal</p>
-        </div>
+        <% } %>
+        
+        <!-- Monthly Spending Goal Progress -->
+        <% if (totalGoal) { %>
+            <div class="card p-4 mb-4 border-warning shadow-sm">
+                <h4 class="text-warning fw-bold">Monthly Spending Goal</h4>
+                <% 
+                    const totalProgress = Math.min(100, Math.round((totalSpent / totalGoal.amount) * 100));
+                %>
+                <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" 
+                         <%-- Error caused by css and ejs. Still runs fine. --%>
+                         style="width: <%= totalProgress %>%;" 
+                         aria-valuenow="<%= totalProgress %>" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100"><%= totalProgress %>%</div>
+                </div>
+                <p class="mt-2">$<%= totalSpent.toFixed(2) %> spent out of $<%= totalGoal.amount.toFixed(2) %> goal</p>
+            </div>
+        <% } else { %>
+            <div class="card p-4 mb-4 border-warning shadow-sm">
+                <h4 class="text-warning fw-bold">Monthly Spending Goal</h4>
+                <p class="text-muted">No total budget goal set. <a href="/manage">Set a goal</a></p>
+            </div>
+        <% } %>
         
         <!-- Category-specific Goals -->
         <h4 class="text-primary fw-bold">Spending by Category</h4>
-        <div class="card p-4 mb-3 border-primary shadow-sm">
-            <h5 class="text-primary fw-bold">Groceries</h5>
-            <div class="progress">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
-            </div>
-            <p class="mt-2">$250 spent out of $500</p>
-        </div>
         
-        <div class="card p-4 mb-3 border-primary shadow-sm">
-            <h5 class="text-primary fw-bold">Entertainment</h5>
-            <div class="progress">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">80%</div>
+        <% if (goals.length === 0 || goals.length === 1 && goals[0].category === 'total') { %>
+            <div class="alert alert-info">
+                <p>You haven't set any category-specific goals yet. <a href="/manage">Set goals</a> to track your spending by category.</p>
             </div>
-            <p class="mt-2">$400 spent out of $500</p>
-        </div>
-        
-        <div class="card p-4 mb-3 border-primary shadow-sm">
-            <h5 class="text-primary fw-bold">Dining Out</h5>
-            <div class="progress">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90%</div>
-            </div>
-            <p class="mt-2">$180 spent out of $200</p>
-        </div>
+        <% } else { %>
+            <% goals.filter(goal => goal.category !== 'total').forEach(goal => { %>
+                <div class="card p-4 mb-3 border-primary shadow-sm">
+                    <h5 class="text-primary fw-bold"><%= goal.category.charAt(0).toUpperCase() + goal.category.slice(1) %></h5>
+                    <% 
+                        const categorySpent = spending[goal.category] || 0;
+                        const categoryProgress = Math.min(100, Math.round((categorySpent / goal.amount) * 100));
+                    %>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" 
+                             <%-- Error caused by css and ejs. Still runs fine. --%>
+                             style="width: <%= categoryProgress + '%' %>;" 
+                             aria-valuenow="<%= categoryProgress %>" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"><%= categoryProgress %>%</div>
+                    </div>
+                    <p class="mt-2">$<%= categorySpent.toFixed(2) %> spent out of $<%= goal.amount.toFixed(2) %></p>
+                </div>
+            <% }); %>
+        <% } %>
     </div>
     <%- include('templates/footer') %>
 </body>
