@@ -1,92 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-bs-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Login Page</title>
-  <!-- Bootstrap CSS -->
-  <link
-    href="bootstrap/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
-  <style>
-    /* Optional custom styling */
-    body {
-      margin: 0;
-      padding: 0;
-    }
-    .left-panel {
-      background-color: #ffffff; /* White background */
-    }
-    .right-panel {
-      background-color: #24285b; /* Dark maroon background */
-      color: #ffffff;
-    }
-    /* Adjust form max-width so it doesn’t stretch too wide */
-    .form-container {
-      max-width: 400px;
-    }
-    /* Hover effect for the link */
-    .hover-effect:hover {
-      color: #B0C4DE; /* Change to desired hover color */
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Budget Budgeting</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row vh-100">
-      <!-- Left Panel (Login Section) -->
-      <div class="col-md-8 d-flex flex-column align-items-center justify-content-center left-panel">
-        <h5 class="mb-4 text-center">
-            <a href="/" class="hover-effect" style="color: inherit;">A Budget Budgeting App</a>
-          </h5>
-        <div class="form-container w-100 px-3 px-md-0">
-          <h2 class="mb-3 text-center">Login to your Account</h2>
-          <form>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email Address / Username</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Enter your email or username"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                placeholder="Enter your password"
-              />
-            </div>
-            <div class="d-grid">
-              <button
-                type="submit"
-                class="btn btn-secondary"
-                style="background-color: #24285b; border-color: #24285b;"
-              >
-                Sign In
-              </button>
-            </div>
-          </form>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5">
+        <div class="brand-header text-center">
+          <a href="/" class="text-decoration-none">
+            <h2 class="text-primary fw-bold">Budget Budgeting</h2>
+          </a>
+          <p class="text-muted">Your personal finance management platform</p>
         </div>
-      </div>
-
-      <!-- Right Panel (Signup Prompt) -->
-      <div class="col-md-4 d-flex flex-column align-items-center justify-content-center right-panel">
-        <h4 class="mb-3">New Here?</h4>
-        <p class="mb-4 text-center px-3">
-          Sign-up and begin managing your finances like an expert!
-        </p>
-        <button onclick="window.location.href='/register'" class="btn btn-light">Sign Up</button>
+        
+        <div class="card shadow">
+          <div class="card-header">
+            <h4 class="text-primary fw-bold text-center mb-0">Sign In</h4>
+          </div>
+          
+          <div class="card-body">
+            <% if (typeof error !== 'undefined' && error) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= error %>
+              </div>
+            <% } %>
+            
+            <form action="/user/login" method="POST">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address / Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email or username"
+                  required
+                />
+              </div>
+              
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember">
+                <label class="form-check-label" for="remember">Remember me</label>
+              </div>
+              
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary shadow">
+                  Sign In
+                </button>
+              </div>
+              
+              <div class="text-center">
+                <p>Don't have an account? <a href="/register" class="text-primary fw-bold">Sign Up</a></p>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <div class="text-center mt-3">
+          <p class="text-muted small">
+            By signing in, you agree to our <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- Bootstrap JS (optional for advanced components) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

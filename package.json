@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Curly-Head-Moi/WSU_CPTS489_BudgetWebApp#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
