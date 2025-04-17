@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { userCheck } = require('./userRouter');
-const goalController = require('./controllers/goalController');
+const goalController = require('../controllers/goalController');
 
 // Get all goals for the logged-in user
 router.get('/goals', userCheck, goalController.getAllGoals);

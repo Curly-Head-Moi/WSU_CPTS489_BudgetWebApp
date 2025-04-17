@@ -14,12 +14,14 @@ const User = require('./models/User'); // path to the model
 const userController = require('./controllers/userController');
 const financialController = require('./controllers/financialController');
 // Import routes
-const userRouter = require('./userRouter');
-const transactionRouter = require('./transactionRouter');
-const goalRouter = require('./goalRouter');
-const budgetRouter = require("./budgetRouter");
+const userRouter = require('./routes/userRouter');
+const transactionRouter = require('./routes/transactionRouter');
+const goalRouter = require('./routes/goalRouter');
+const budgetRouter = require("./routes/budgetRouter");
+const supportRouter = require("./routes/supportRouter");
 const Goal = require('./models/Goal');
 const Transaction = require('./models/Transaction');
+const SupportInquiry = require('./models/SupportInquiry');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -54,6 +56,16 @@ const adminJs = new AdminJS({
               }
               return req;
             },
+          },
+        },
+      },
+    },
+    {
+      resource: SupportInquiry,
+      options: {
+        properties: {
+          message: {
+            type: 'textarea',
           },
         },
       },
@@ -97,6 +109,7 @@ app.use('/user', userRouter);
 app.use('/transactions', transactionRouter);
 app.use('/manage', goalRouter);
 app.use('/budget', budgetRouter);
+app.use('/support', supportRouter);
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -125,7 +138,7 @@ app.get('/login', (req, res) => {
 app.get('/logout', userController.logout);
 
 app.get('/support', (req, res) => {
-  res.render('support');
+  res.render('support', { error: null, success: null, formData: {} });
 });
 
 //404 for all other routes
