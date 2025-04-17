@@ -3,10 +3,13 @@ const express = require('express');
 const bodyParser = require('body-parser');  // for parsing form data
 const path = require('path');
 const session = require('express-session');
-
+const AdminJS = require('adminjs');
+const AdminJSExpress = require('@adminjs/express');
+const AdminJSSequelize  = require('@adminjs/sequelize');
+const bcrypt = require('bcrypt');
 //DB
 const sequelize = require('./db');
-
+const User = require('./models/User'); // path to the model
 // Import routes
 const userRouter = require('./userRouter');
 const transactionRouter = require('./transactionRouter');
@@ -25,6 +28,57 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+AdminJS.registerAdapter(AdminJSSequelize);
+const adminJs = new AdminJS({
+  databases: [sequelize],          // auto‑load every table
+  rootPath : '/admin',
+  resources: [
+    {
+      resource: User,
+      options : {
+        properties: {
+          password: { isVisible: false }, // hide pwd column in list/show
+        },
+        actions: {
+          new: {
+            // hash the password before saving if the admin creates a user
+            before: async (req) => {
+              if (req.payload?.password) {
+                req.payload.password = await bcrypt.hash(req.payload.password, 10);
+              }
+              return req;
+            },
+          },
+        },
+      },
+    },
+  ],
+});
+const router = AdminJSExpress.buildAuthenticatedRouter( //User must be admin to access admin panel with normal credentials
+  adminJs,
+  {
+    cookieName   : 'adminjs',
+    cookiePassword: 'asuiflasdjkfbhapiulvbpaiusdflasdfasuifajsdbfaulif284y209401348', //not same as admin password
+    authenticate : async (email, password) => {
+      const user = await User.findOne({ where: { email } });
+      if (
+        user &&                       
+        user.isAdmin &&
+        (await bcrypt.compare(password, user.password))
+      ) {
+        return user;                 
+      }
+      return false;              
+    },
+  },
+  null,
+  { resave: false, saveUninitialized: false },
+);
+app.use(adminJs.options.rootPath, router);
+
+
+
 
 // Middleware to parse request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -102,6 +156,19 @@ app.listen(PORT, () => {
 async function setup() {
   console.log("setup test...")
 }
+(async () => { //For Testing/demo
+  const hashed = await bcrypt.hash('123123', 10);   
+  await User.create({
+    firstName : 'blah',
+    lastName  : 'blah',
+    username  : 'blah',
+    email     : 'blah@1.com',
+    password  : hashed,            
+    isAdmin   : true,
+    termsAccepted: true,
+  });
+  console.log('admin user created');
+})();
 
 // use alter:true for to preserve data
 // use force:true to completely rebuild the database

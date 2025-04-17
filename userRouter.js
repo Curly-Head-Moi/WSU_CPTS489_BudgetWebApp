@@ -121,5 +121,7 @@ router.get("/financial", userCheck, (req, res) => {
     res.render('financial');
 });
 
+
+
 module.exports = router;
 module.exports.userCheck = userCheck;
