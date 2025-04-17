@@ -10,13 +10,18 @@ const bcrypt = require('bcrypt');
 //DB
 const sequelize = require('./db');
 const User = require('./models/User'); // path to the model
+// Import controllers
+const userController = require('./controllers/userController');
+const financialController = require('./controllers/financialController');
 // Import routes
-const userRouter = require('./userRouter');
-const transactionRouter = require('./transactionRouter');
-const goalRouter = require('./goalRouter');
-const budgetRouter = require("./budgetRouter");
+const userRouter = require('./routes/userRouter');
+const transactionRouter = require('./routes/transactionRouter');
+const goalRouter = require('./routes/goalRouter');
+const budgetRouter = require("./routes/budgetRouter");
+const supportRouter = require("./routes/supportRouter");
 const Goal = require('./models/Goal');
 const Transaction = require('./models/Transaction');
+const SupportInquiry = require('./models/SupportInquiry');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -55,6 +60,16 @@ const adminJs = new AdminJS({
         },
       },
     },
+    {
+      resource: SupportInquiry,
+      options: {
+        properties: {
+          message: {
+            type: 'textarea',
+          },
+        },
+      },
+    },
   ],
 });
 const router = AdminJSExpress.buildAuthenticatedRouter( //User must be admin to access admin panel with normal credentials
@@ -79,9 +94,6 @@ const router = AdminJSExpress.buildAuthenticatedRouter( //User must be admin to 
 );
 app.use(adminJs.options.rootPath, router);
 
-
-
-
 // Middleware to parse request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -96,15 +108,8 @@ app.use((req, res, next) => {
 app.use('/user', userRouter);
 app.use('/transactions', transactionRouter);
 app.use('/manage', goalRouter);
-
-// Authentication middleware for protected routes
-const authMiddleware = (req, res, next) => {
-  if (req.session && req.session.user) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-};
+app.use('/budget', budgetRouter);
+app.use('/support', supportRouter);
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -115,49 +120,9 @@ app.get('/index', (req, res) => {
 });
 
 // Protected routes
-app.get('/financial', authMiddleware, async (req, res) => {
-  try {
-    const userEmail = req.session.user.id;
-    const goals = await Goal.findByUser(userEmail);
-    const transactions = await Transaction.findByOwner(userEmail);
-    
-    // Calculate spending for each category
-    const spending = {};
-    const totalGoal = goals.find(g => g.category === 'total');
-    let totalSpent = 0;
-    
-    // Initialize spending for each category
-    transactions.forEach(transaction => {
-      if (transaction.transactionType === 'Expense') {
-        totalSpent += transaction.amount;
-        
-        // Track category spending
-        if (!spending[transaction.category]) {
-          spending[transaction.category] = 0;
-        }
-        spending[transaction.category] += transaction.amount;
-      }
-    });
-    
-    res.render('financial', { 
-      goals: goals || [], 
-      spending: spending,
-      totalSpent: totalSpent,
-      totalGoal: totalGoal
-    });
-  } catch (error) {
-    console.error("Error loading financial data:", error);
-    res.status(500).render('financial', { 
-      goals: [],
-      spending: {},
-      totalSpent: 0,
-      totalGoal: null,
-      error: "Failed to load financial data"
-    });
-  }
-});
+app.get('/financial', userController.authMiddleware, financialController.getFinancialDashboard);
 
-app.get('/manage', authMiddleware, (req, res) => {
+app.get('/manage', userController.authMiddleware, (req, res) => {
   res.render('manage');
 });
 
@@ -170,17 +135,10 @@ app.get('/login', (req, res) => {
   res.render('login', { error: null });
 });
 
-app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session:", err);
-    }
-    res.redirect('/');
-  });
-});
+app.get('/logout', userController.logout);
 
 app.get('/support', (req, res) => {
-  res.render('support');
+  res.render('support', { error: null, success: null, formData: {} });
 });
 
 //404 for all other routes
