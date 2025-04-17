@@ -30,7 +30,6 @@
                 %>
                 <div class="progress">
                     <div class="progress-bar bg-warning" role="progressbar" 
-                         <%-- Error caused by css and ejs. Still runs fine. --%>
                          style="width: <%= totalProgress %>%;" 
                          aria-valuenow="<%= totalProgress %>" 
                          aria-valuemin="0" 
@@ -62,8 +61,7 @@
                     %>
                     <div class="progress">
                         <div class="progress-bar bg-primary" role="progressbar" 
-                             <%-- Error caused by css and ejs. Still runs fine. --%>
-                             style="width: <%= categoryProgress + '%' %>;" 
+                             style="width: <%= categoryProgress %>%;" 
                              aria-valuenow="<%= categoryProgress %>" 
                              aria-valuemin="0" 
                              aria-valuemax="100"><%= categoryProgress %>%</div>
